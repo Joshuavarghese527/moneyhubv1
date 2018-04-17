@@ -1,8 +1,15 @@
 class V1::SessionsController < ApplicationController 
-  def create
-  end
+    def create
+      user = User.where(email: params[:email]).first
 
-  def destroy
-  end 
-    
+      if user&.valid_password?(params[:password])  #same as user && user.valid_password?(...)
+        render json: user.as_json(only: [:email, :authentication_token], status: :created)
+      else
+        head(:unauthorized)
+      end
+    end
+
+    def destroy
+
+    end 
   end
